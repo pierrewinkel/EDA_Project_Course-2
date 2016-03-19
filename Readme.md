@@ -442,7 +442,7 @@ The result is the following graph.
 
 **Baltimore has seen a decrease of 66%.**
 
-**Los Angeles has sees a rise of 5%.**
+**Los Angeles has seen a rise of 5%.**
 
 
 ![plot6.png](https://github.com/pierrewinkel/EDA_Project_Course-2/blob/master/plot6.png)
