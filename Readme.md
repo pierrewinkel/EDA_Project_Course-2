@@ -410,7 +410,7 @@ The result is the following graph.
 
 **The PM2.5 Emissions from motor vehicles related sources have decreased in Baltimore City and in Los Angeles from 1999 to 2008.**
 
-**Bit Baltimore has seen a much higher decrease than Los Angeles.**
+**But Baltimore has seen a much higher decrease than Los Angeles.**
 
 
 ![plot6.png](https://github.com/pierrewinkel/EDA_Project_Course-2/blob/master/plot6.png)
