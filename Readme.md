@@ -81,11 +81,6 @@ Mode  :character   Median :2005
 
 ## 2. Have total emissions from PM2.5 decreased in the United States from 1999 to 2008 ?
 
-In order to get the total Emissions per year, we have to sum all of them
-
-```
-NEIagg <- aggregate(Emissions ~ year,NEI,sum)
-```
 Open the PNG device
 
 ```
