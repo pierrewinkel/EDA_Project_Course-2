@@ -91,15 +91,16 @@ Open the PNG device
 ```
 png(filename='plot1.png', width=480,height=480,units='px')              
 ```
-Plot an histogram using the standard plotting system
+Plot a boxplot using the standard plotting system. To be able to compare data, I compute log10(Emissions)
 
 ```
-barplot(NEIagg$Emissions,                         ## plots the histogram
-        main = "Total PM2.5 Emissions from all US Sources", ## gives a title
-        names = NEIagg$year,                      ## gives a name to the bars (years)
+boxplot(log10(NEI$Emissions) ~ NEI$year,          ## plot a boxplot with all the measures
+        main = expression("log"[10]*"(PM"[2.5]*" Emissions from all US Sources)"),
+                                                  ## main = to give a title
         xlab = "Year",                            ## gives a specified name to the x axis
-        ylab = "Emissions (tons)",                ## gives a specified name to the y axis
-        col="red")                                ## gives a red color to the histogram
+        ylab = expression("log"[10]*"(Emissions)"),
+                                                  ## gives a specified name to the y axis
+        col=brewer.pal(n = 4, name = "Oranges"))  ## Uses the Oranges brewer palette
 ```
 Close the device
 
@@ -134,27 +135,22 @@ str(NEIBalt)
  $ year     : int  1999 1999 1999 1999 1999 1999 1999 1999 1999 1999 ...
 ```
 
-In order to get the total Emissions per year, we have to sum all of them
-
-```
-NEIBaltSum <- aggregate(Emissions ~ year,NEIBalt,sum)
-```
-
 Open the PNG device
 
 ```
 png(filename='plot2.png', width=480,height=480,units='px')
 ```
 
-Plot an histogram using the standard plotting system
+Plot boxplot using the standard plotting system. To be able to compare data, I compute log10(Emissions)
 
 ```
-barplot(NEIBaltSum$Emissions,                     ## plots the histogram
-        main = "Total PM2.5 Emissions in Baltimore",  ## gives a title
-        names = NEIBaltSum$year,                  ## gives a name to the bars (years)
+boxplot(log10(NEIBalt$Emissions) ~ NEIBalt$year,  ## plot a boxplot with all the measures
+        main = expression("log"[10]*"(PM"[2.5]*" Emissions in Baltimore)"),
+        					  ## main = to give a title
         xlab = "Year",                            ## gives a specified name to the x axis
-        ylab = "Emissions (tons)",                ## gives a specified name to the y axis
-        col="red")                                ## gives a red color to the histogram
+        ylab = expression("log"[10]*"(Emissions)"),
+                                                  ## gives a specified name to the y axis
+        col=brewer.pal(n = 4, name = "Oranges"))  ## Uses the Oranges brewer palette
 ```
 
 Close the PNG device
@@ -179,35 +175,27 @@ Groups the Baltimore measures by type : point, nonpoint, onroad & nonroad
 NEIBaltbyType <- group_by(NEIBalt, type)
 ```
 
-In order to get the total Emissions per year, we have to sum all of them by type and by year
-
-```
-NEIBaltbyTypeSum <- aggregate(NEIBaltbyType$Emissions,
-                                by = list(type = NEIBaltbyType$type,
-                                          year = NEIBaltbyType$year),
-                                sum)
-```
-
 Open the PNG device
 
 ```
 png(filename='plot3.png',width=480,height=480,units='px')              
 ```
 
-Plot the graph using the ggplot2 system
+Plot the graph using the ggplot2 system. Again, to be able to compare data, I compute log10(Emissions)
 
 ```
-graph <- ggplot(NEIBaltbyTypeSum, aes(factor(year), x, fill = type)) +
-                                                  ## plot Emission (x) according to the year
+graph <- ggplot(NEIBaltbyType, aes(factor(year), log10(Emissions), fill = type)) +
+                                                  ## plot log10(Emissions) (x) according to the year
                                                   ## with a filling different for each type
-        geom_bar(stat = "identity") +             ## gives a form to the measures : bars
+        geom_boxplot() +                          ## gives a form to the measures : boxplot
         facet_grid(.~type) +                      ## makes 4 subsets, 1 for each type
         xlab("Year") +                            ## gives a title to the x axis
-        ylab(expression("Total PM"[2.5]*" Emission (tons)")) + 
+        ylab(expression("log"[10]*"(PM"[2.5]*" Emission")) + 
                                                   ## gives a title to the y axis
-        ggtitle(expression("PM"[2.5]*" Emissions, Baltimore City 1999-2008 by type")) +
+        ggtitle(expression("log"[10]*"(PM"[2.5]*" Emissions), Baltimore City 1999-2008 by type")) +
                                                   ## gives a title to the plot
-        theme(legend.position="none")             ## removes the legend
+        theme(legend.position="none") +           ## removes the legend
+        scale_fill_brewer(palette = "Oranges")    ## Uses the Oranges brewer palette
 
 print(graph)                                      ## prints the graph variable
 ```
@@ -256,25 +244,32 @@ str(combustioncoalNEI)
  $ year     : int  1999 1999 1999 1999 1999 1999 1999 1999 1999 1999 ...
 ```
 
-In order to get the total Emissions per year, we have to sum all of them
+Removes the measures = 0
 
 ```
-combustioncoalNEIagg <- aggregate(Emissions ~ year,combustioncoalNEI,sum)
+combustioncoalNEIsubset <- subset(combustioncoalNEI, combustioncoalNEI$Emissions !=0)
 ```
+
 Open the PNG device
 
 ```
 png(filename='plot4.png',width=480,height=480,units='px')              
 ```
-Plot an histogram using the standard plotting system
+Plot the graph using the ggplot2 system. Again, to be able to compare data, I compute log10(Emissions)
 
 ```
-barplot(combustioncoalNEIagg$Emissions,           ## plots the histogram
-        main = "Total PM2.5 Emissions from coal combustion sources", ## gives a title
-        names = combustioncoalNEIagg$year,        ## gives a name to the bars (years)
-        xlab = "Year",                            ## gives a specified nam to the x axis
-        ylab = "Emissions (tons)",                ## gives a specified name to the y axis
-        col="red")                                ## gives a red color to the histogram
+graph <- ggplot(combustioncoalNEIsubset, aes(factor(year), log10(Emissions), fill = factor(year))) +
+                                                  ## plot log10(Emissions) (x) according to the year
+        geom_boxplot(notch = TRUE) +              ## gives a form to the measures : boxplot
+        xlab("Year") +                            ## gives a title to the x axis
+        ylab(expression("log"[10]*"(PM"[2.5]*" Emissions)")) + 
+                                                  ## gives a title to the y axis
+        ggtitle(expression("log"[10]*"(PM"[2.5]*" Emissions from coal combustion), 1999-2008")) +
+                                                  ## gives a title to the plot
+        theme(legend.position="none") +           ## removes the legend
+        scale_fill_brewer(palette="Oranges")      ## Uses the Oranges brewer palette
+
+print(graph)                                      ## prints the graph variable
 ```
 Close the device
 
@@ -322,27 +317,27 @@ str(motorvehicleNEI)
  $ year     : int  1999 1999 1999 1999 1999 1999 1999 1999 1999 1999 ...
 ```
  
-In order to get the total Emissions per year, we have to sum all of them
-
-```
-motorvehicleNEIagg <- aggregate(Emissions ~ year,motorvehicleNEI,sum)
-```
 Open the PNG device
 
 ```
 png(filename='plot5.png',width=480,height=480,units='px')
 ```
 
-Plot an histogram using the standard plotting system
+Plot the graph using the ggplot2 system. Again, to be able to compare data, I compute log10(Emissions)
 
 ```
-barplot(motorvehicleNEIagg$Emissions,            ## plots the histogram
-        main = "Total PM2.5 Emissions from motor vehicles sources in Baltimore",
-                                                 ## gives a title
-        names = motorvehicleNEIagg$year,         ## gives a name to the bars (years)
-        xlab = "Year",                           ## gives a specified name to the x axis
-        ylab = "Emissions (tons)",               ## gives a specified name to the y axis
-        col="red")                               ## gives a red color to the histogram
+graph <- ggplot(motorvehicleNEI, aes(x = factor(year), y = log10(Emissions), fill = factor(year))) +
+                                                  ## plot log10(Emissions) (x) according to the year
+        geom_boxplot() +			  ## gives a form to the measures : boxplot
+        xlab("Year") +                            ## gives a title to the x axis
+        ylab(expression("log"[10]*"(PM"[2.5]*" Emission)")) + 
+                                                  ## gives a title to the y axis
+        ggtitle(expression("log"[10]*"(PM"[2.5]*" Emissions from motor vehicle),Baltimore City, 1999-2008")) +
+                                                  ## gives a title to the plot
+        theme(legend.position="none") +           ## removes the legend
+        scale_fill_brewer(palette="Oranges")      ## Uses the Oranges brewer palette
+
+print(graph)                                      ## prints the graph variable
 ```
 Close the device
 
@@ -374,38 +369,17 @@ motorvehicleNEILA <- NEILA[NEILA$SCC %in% motorvehicleSCC,]
 motorvehicleNEIBalt <- NEIBalt[NEIBalt$SCC %in% motorvehicleSCC,]
 ```
 
-In order to get the total Emissions per year, we have to sum all of them
-
-```
-motorvehicleNEILAagg <- aggregate(Emissions ~ year,motorvehicleNEILA,sum)
-motorvehicleNEIBaltagg <- aggregate(Emissions ~ year,motorvehicleNEIBalt,sum)
-```
-
 Gives a name to a new city column
 
 ```
-motorvehicleNEILAagg$city <- "Los Angeles"
-motorvehicleNEIBaltagg$city <- "Baltimore"
+motorvehicleNEILA$city <- "Los Angeles"
+motorvehicleNEIBalt$city <- "Baltimore"
 ```
 
 Sum the two aggregations : Baltimore & Los Angeles
 
 ```
-motorvehicleNEIBaltLA <- rbind(motorvehicleNEILAagg,motorvehicleNEIBaltagg)
-```
-We get an 8 observation dataframe :
-
-```
-head(motorvehicleNEIBaltLA, 8)
-  year Emissions        city
-1 1999 6109.6900 Los Angeles
-2 2002 7188.6802 Los Angeles
-3 2005 7304.1149 Los Angeles
-4 2008 6421.0170 Los Angeles
-5 1999  403.7700   Baltimore
-6 2002  192.0078   Baltimore
-7 2005  185.4144   Baltimore
-8 2008  138.2402   Baltimore
+motorvehicleNEIBaltLA <- rbind(motorvehicleNEILA,motorvehicleNEIBalt)
 ```
 
 Open the PNG device
@@ -414,22 +388,23 @@ Open the PNG device
 png(filename='plot6.png',width=480,height=480,units='px') 
 ```
 
-Plot the graph using the ggplot2 system
+Plot the graph using the ggplot2 system. Again, to be able to compare data, I compute log10(Emissions)
 
 ```             
-graph <- ggplot(motorvehicleNEIBaltLA, aes(factor(year), Emissions, fill=city)) +
-        										  ## plot Emission (x) according to the year
-        										  ## with a filling different for each city
+graph <- ggplot(motorvehicleNEIBaltLA, aes(factor(year), log10(Emissions), fill=city)) +
+        					  ## plot log10(Emissions) (x) according to the year
+        					  ## with a filling different for each city
         facet_grid(.~city) +                      ## makes 2 subsets, 1 for each city
-        geom_bar(stat = "identity") +             ## gives a form to the measures : bars
+        geom_boxplot(notch = TRUE) +              ## gives a form to the measures : bars
         xlab("Year") +                            ## gives a title to the x axis
-        ylab(expression("Total PM"[2.5]*" Emission (tons)")) + 
+        ylab(expression("log"[10]*"(PM"[2.5]*" Emission)")) + 
                                                   ## gives a title to the y axis
-        ggtitle(expression("PM"[2.5]*" Motor Vehicles Emissions, Baltimore City & Los Angeles, 1999-2008")) +
+        ggtitle(expression("log"[10]*"(PM"[2.5]*" Emissions from motor vehicle),Baltimore City & Los Angeles, 1999-2008")) +
                                                   ## gives a title to the plot
-        theme(legend.position="none")             ## removes the legend
-
-print(graph)                                      ## prints the graph
+        theme(legend.position="none") +           ## removes the legend
+        scale_fill_brewer(palette="Oranges")      ## Uses the Oranges brewer palette
+        
+print(graph)                                      ## prints the graph variable
 ```
 Close the device
 
