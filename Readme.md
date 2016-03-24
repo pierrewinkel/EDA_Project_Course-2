@@ -208,8 +208,8 @@ dev.off()                                         ## Close the device
 
 The result is the following graph. 
 
-**The PM2.5 Emissions have decreased in Baltimore City from 1999 to 2008 for the Non Road, On Road and Non Point types.
-But the Emissions have increased for the Point type**.
+**The PM2.5 Emissions have decreased in Baltimore City from 1999 to 2008 for the Non Road, On Road, Non Point and Point types.
+For the Non Point type, the median value has only decreased a little bit**.
 
 ![plot3.png](https://github.com/pierrewinkel/EDA_Project_Course-2/blob/master/plot3.png)
 
@@ -279,7 +279,7 @@ dev.off()                                         ## Close the device
 
 The result is the following graph. 
 
-**The PM2.5 Emissions from coal combustion related sources have decreased in the United States from 1999 to 2008.**
+**The PM2.5 Emissions from coal combustion related sources have NON decreased in the United States from 1999 to 2008.**
 
 ![plot4.png](https://github.com/pierrewinkel/EDA_Project_Course-2/blob/master/plot4.png)
 
@@ -413,11 +413,9 @@ dev.off()
 ```
 The result is the following graph. 
 
-**The PM2.5 Emissions from motor vehicles related sources have decreased in Baltimore City from 1999 to 2008 and increased in Los Angeles County during the same period.**
+**The PM2.5 Emissions from motor vehicles related sources have decreased in Baltimore City and in Los Angeles from 1999 to 2008.**
 
-**Baltimore has seen a decrease of 66%.**
-
-**Los Angeles has seen a rise of 5%.**
+**Bit Baltimore has seen a much higher decrease than Los Angeles.**
 
 
 ![plot6.png](https://github.com/pierrewinkel/EDA_Project_Course-2/blob/master/plot6.png)
