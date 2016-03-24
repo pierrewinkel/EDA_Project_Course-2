@@ -274,7 +274,7 @@ dev.off()                                         ## Close the device
 
 The result is the following graph. 
 
-**The PM2.5 Emissions from coal combustion related sources have NON decreased in the United States from 1999 to 2008.**
+**The PM2.5 Emissions from coal combustion related sources have NOT decreased in the United States from 1999 to 2008.**
 
 ![plot4.png](https://github.com/pierrewinkel/EDA_Project_Course-2/blob/master/plot4.png)
 
